@@ -19,14 +19,47 @@ distortion, followed by the field derivation (Figure~\ref{fig:sce-threesteps}).
 \paragraph{Common inputs and assumptions.}
 The input is a sample of $t_0$-tagged cosmic-muon tracks ($\sim$200k),
 classified by which faces their end points touch; the $t_0$ tag fixes the
-absolute drift ($x$) coordinate. A dedicated SCE simulation map and a
-drift-velocity model $v(E)$ are also used. The method assumes cosmic muons are
-\emph{straight} over the drift, the \emph{anode is undistorted} (ionization
+absolute drift ($x$) coordinate. A dedicated SCE simulation
+map\footnote{The simulation map (the BNL ``SpaCE'' model) is a forward
+simulation of the effect: a space-charge density taken linear in the drift
+coordinate and independent of $y,z$ (reaching $90~\mathrm{nC/m^3}$ at the
+cathode, set by the cosmic ionization rate and the $\sim 4~\mathrm{mm/s}$ ion
+drift) is used to solve the Poisson problem for the field via a Fourier-series
+solution, the field is interpolated everywhere with radial basis functions, and
+ionization electrons are ray-traced through it (RKF45) using the $v(E)$ model to
+predict the displaced reconstructed positions. This gives the forward
+(true~$\rightarrow$~reco) map; the backward map is its inverse. It neglects
+argon flow, non-uniform cosmic deposition, and the feedback of the field
+distortion on the ion drift, which motivates the data-driven calibration.}
+and a drift-velocity model $v(E)$ are also used. The method assumes cosmic muons
+are \emph{straight} over the drift, the \emph{anode is undistorted} (ionization
 there barely drifts, giving an absolute reference), and the SCE is
-approximately \emph{time-stable} (tracks need not share an event). The output is
-a set of \texttt{TH3F} maps on a $\approx 10$~cm voxel grid, holding the
-backward (reconstructed~$\rightarrow$~true) offsets $D_x,D_y,D_z$ and, after
-Section~\ref{ssec:sce-efield}, the relative field distortions.
+approximately \emph{time-stable} (tracks need not share an event). To keep the
+straight-line assumption valid, only high-momentum tracks are used, with minimum
+reconstructed (MCS) momenta that depend on the category
+(Table~\ref{tab:sce-mcs}); tracks piercing both the anode and cathode are
+rejected. The output is a set of \texttt{TH3F} maps on a $\approx 10$~cm voxel
+grid, holding the backward (reconstructed~$\rightarrow$~true) offsets
+$D_x,D_y,D_z$ and, after Section~\ref{ssec:sce-efield}, the relative field
+distortions.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\hline
+Track category & MC & Data \\
+\hline
+Anode-piercing & $\geq 3.3$ & $\geq 1.5$ \\
+Cathode-piercing & $\geq 1.7$ & $\geq 1.1$ \\
+Anode\,+\,cathode piercing & rejected & rejected \\
+\hline
+\end{tabular}
+\caption{Minimum reconstructed (multiple-Coulomb-scattering) track momentum
+[GeV] required per category in \texttt{CalibSCE}. Higher momenta give straighter
+tracks; tracks that pierce both the anode and cathode are rejected in the
+calibration call.}
+\label{tab:sce-mcs}
+\end{table}
 
 \begin{figure}[t]
   \centering
