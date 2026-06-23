@@ -81,20 +81,35 @@ end, so its other end marks the true crossing of one of the remaining five
 faces.
 \textbf{Input.} Anode-piercing $t_0$-tagged tracks; the SCE simulation map for
 the transverse components.
-\textbf{Algorithm.} For the non-anode end, the offset component
-\emph{orthogonal} to the touched face is measured directly from the projected
-distance of the track end to that face (adding $4.5$~cm in data to account for
-the field-cage gap). The two in-face (transverse) components are then fixed
-using ratios taken from the simulation, e.g.\ at the top face
+\textbf{Algorithm.} Consider a track exiting the top face (normal $\hat{y}$).
+Its true exit must lie on that face, whose position $y_{\rm top}$ is known, so
+the \emph{face-orthogonal} component is obtained \emph{directly from data} as the
+projected (perpendicular) distance of the reconstructed track end to the face,
+\begin{equation}
+\Delta y_{\rm reco}=y_{\rm top}-y_{\rm end}\quad(+\,4.5~\text{cm in data for the field-cage gap}),
+\end{equation}
+where $y_{\rm end}$ is the reconstructed end-point coordinate. The two
+\emph{in-face} components cannot be measured from a single track, since the true
+$x,z$ on the face are unknown and the reconstructed track is itself distorted.
+They are recovered by assuming the true offset vector is \emph{parallel} to the
+simulated one at that $(x,z)$, so all components share a common scale
+$S(x,z)=\Delta y_{\rm reco}/\Delta y_{\rm sim}$ that is fixed by the measured
+orthogonal component; hence
 \begin{equation}
 \Delta x_{\rm reco}=\Delta y_{\rm reco}\,
 \frac{\Delta x_{\rm sim}(x,z)}{\Delta y_{\rm sim}(x,z)},\qquad
 \Delta z_{\rm reco}=\Delta y_{\rm reco}\,
 \frac{\Delta z_{\rm sim}(x,z)}{\Delta y_{\rm sim}(x,z)} .
 \end{equation}
-The map is built in 2D voxels ($\approx 10$~cm) per face. Because the gap blinds
-offsets below $4.5$~cm, the near-anode region ($x<100$~cm) is filled from
-simulation, scaled to the data-driven measurements at larger $x$.
+In this way data sets the \emph{magnitude} through the directly-measured
+orthogonal component (by far the largest), while the simulation supplies only the
+\emph{direction} (the component ratios), which is robust to its approximate
+space-charge density; this minimizes the dependence on simulation. The map is
+built in 2D voxels ($\approx 10$~cm) per face. Because the gap blinds offsets
+below $4.5$~cm, the near-anode region ($x<100$~cm) is filled from simulation,
+scaled to the data-driven measurements at larger $x$. (For the
+upstream/downstream faces $\Delta z$ is instead the orthogonal, data-driven
+component.)
 \textbf{Output.} Data-driven true entry/exit points (offset maps) on the top,
 bottom, upstream, and downstream faces.
 
